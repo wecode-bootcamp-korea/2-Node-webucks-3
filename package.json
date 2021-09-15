@@ -1,8 +1,8 @@
 {
-  "name": "undefined",
+  "name": "we_starbucks",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "we_starbucks BE project of Team #3",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --exec babel-node server.js"

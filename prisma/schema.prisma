@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -7,10 +10,71 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model users {
+model categories {
+  id       Int        @id @default(autoincrement())
+  name     String
+  products products[]
+}
+
+model products {
+  id                Int                 @id @default(autoincrement())
+  category_id       Int
+  korean_name       String
+  english_name      String
+  categories        categories          @relation(fields: [category_id], references: [id])
+  images            images[]
+  product_allergies product_allergies[]
+  descriptions      descriptions[]
+  nutrition_facts   nutrition_facts[]
+}
+
+model images {
+  id         Int      @id @default(autoincrement())
+  product_id Int
+  image_url  String
+  products   products @relation(fields: [product_id], references: [id])
+}
+
+model allergies {
+  id                Int                 @id @default(autoincrement())
+  allergen          String
+  product_allergies product_allergies[]
+}
+
+model product_allergies {
   id         Int       @id @default(autoincrement())
-  user_id    Int
-  title      String
-  body       String
-  created_at DateTime? @default(now())
+  product_id Int
+  allergy_id Int
+  products   products  @relation(fields: [product_id], references: [id])
+  allergies  allergies @relation(fields: [allergy_id], references: [id])
+}
+
+model descriptions {
+  id          Int      @id @default(autoincrement())
+  product_id  Int
+  description String
+  products    products @relation(fields: [product_id], references: [id])
+}
+
+model nutrition_facts {
+  id         Int      @id @default(autoincrement())
+  product_id Int
+  serve_size String
+  kcal       String
+  fat        String
+  protein    String
+  natrium    String
+  sugar      String
+  caffeine   String
+  products   products @relation(fields: [product_id], references: [id])
+}
+
+model users {
+  id            Int     @id @default(autoincrement())
+  email         String  @unique
+  password      String
+  username      String?
+  address       String?
+  phone_number  String?
+  policy_agreed Boolean @default(true)
 }
