@@ -1,7 +1,7 @@
 {
   "name": "undefined",
   "version": "1.0.0",
-  "description": "",
+  "description": "``` HTTP/1.1 200 OK Connection: keep-alive Content-Length: 72 Content-Type: application/json; charset=utf-8 Date: Mon, 13 Sep 2021 03:38:02 GMT ETag: W/\"48-OgTgIpZIN4kkGHEulmKIykWajcY\" Keep-Alive: timeout=5 X-Powered-By: Express",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -15,16 +15,24 @@
     "@babel/node": "^7.15.4",
     "@babel/preset-env": "^7.15.6",
     "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "nodemon": "^2.0.12",
-    "prisma": "^3.0.2",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "prettier": "^2.3.2"
+    "express": "^4.17.1",
+    "nodemon": "^2.0.12",
+    "prettier": "^2.3.2",
+    "prisma": "^3.0.2"
   },
   "dependencies": {
     "@prisma/client": "^3.0.2"
   },
-  "type": "module"
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wecode-bootcamp-korea/2-Node-webucks-3.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wecode-bootcamp-korea/2-Node-webucks-3/issues"
+  },
+  "homepage": "https://github.com/wecode-bootcamp-korea/2-Node-webucks-3#readme"
 }
