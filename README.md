@@ -1,6 +1,6 @@
 # 다함께charcharchar
 
-```
+```http
 HTTP/1.1 200 OK
 Connection: keep-alive
 Content-Length: 72
