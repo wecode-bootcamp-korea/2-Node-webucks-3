@@ -1,19 +1,22 @@
-# 판타스틱 포 입니다
+# undefined
 
-```js
-import 김시원 from '../precourse/맨오브스틸';
-import 김원영 from '../precourse/Burn-it';
-import 김휘민 from '../precourse/새싹';
-import 이예봄 from '../precourse/바람의나라';
-import 이원국 from '../precourse/바람의나라';
+```
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 72
+Content-Type: application/json; charset=utf-8
+Date: Mon, 13 Sep 2021 03:38:02 GMT
+ETag: W/"48-OgTgIpZIN4kkGHEulmKIykWajcY"
+Keep-Alive: timeout=5
+X-Powered-By: Express
 
-class FantasticFor extends Foundation {
-	render() {
-		return (
-			<김시원/><김원영/><김휘민/><이예봄/><이원국/>
-		)
-	}
+{
+    "member": [
+        "김민재",
+        "김윤진",
+        "김재원",
+        "김지현",
+        "이원국"
+    ]
 }
-
-export default FantasticFor
 ```
