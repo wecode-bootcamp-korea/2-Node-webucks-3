@@ -10,71 +10,87 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model categories {
-  id       Int        @id @default(autoincrement())
-  name     String
-  products products[]
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String    @db.VarChar(100)
+  products Product[]
+
+  @@map("categories")
 }
 
-model products {
-  id                Int                 @id @default(autoincrement())
-  category_id       Int
-  korean_name       String
-  english_name      String
-  categories        categories          @relation(fields: [category_id], references: [id])
-  images            images[]
-  product_allergies product_allergies[]
-  descriptions      descriptions[]
-  nutrition_facts   nutrition_facts[]
+model Product {
+  id               Int                @id @default(autoincrement())
+  category         Category           @relation(fields: [categoryId], references: [id])
+  categoryId       Int                @map("category_id")
+  koreanName       String             @map("korean_name") @db.VarChar(100)
+  englishName      String             @map("english_name") @db.VarChar(100)
+  images           Image[]
+  productAllergies ProductAllergies[]
+  descriptions     Description[]
+  nutritionFacts   NutritionFact[]
+
+  @@map("products")
 }
 
-model images {
-  id         Int      @id @default(autoincrement())
-  product_id Int
-  image_url  String
-  products   products @relation(fields: [product_id], references: [id])
+model Image {
+  id        Int     @id @default(autoincrement())
+  productId Int     @map("product_id")
+  imageUrl  String  @map("image_url")
+  products  Product @relation(fields: [productId], references: [id])
+
+  @@map("images")
 }
 
-model allergies {
-  id                Int                 @id @default(autoincrement())
-  allergen          String
-  product_allergies product_allergies[]
+model Allergy {
+  id               Int                @id @default(autoincrement())
+  allergen         String
+  productAllergies ProductAllergies[]
+
+  @@map("allergies")
 }
 
-model product_allergies {
-  id         Int       @id @default(autoincrement())
-  product_id Int
-  allergy_id Int
-  products   products  @relation(fields: [product_id], references: [id])
-  allergies  allergies @relation(fields: [allergy_id], references: [id])
+model ProductAllergies {
+  id        Int     @id @default(autoincrement())
+  productId Int     @map("product_id")
+  allergyId Int     @map("allergy_id")
+  products  Product @relation(fields: [productId], references: [id])
+  allergies Allergy @relation(fields: [allergyId], references: [id])
+
+  @@map("product_allergies")
 }
 
-model descriptions {
-  id          Int      @id @default(autoincrement())
-  product_id  Int
+model Description {
+  id          Int     @id @default(autoincrement())
+  productId   Int     @map("product_id")
   description String
-  products    products @relation(fields: [product_id], references: [id])
+  products    Product @relation(fields: [productId], references: [id])
+
+  @@map("descriptions")
 }
 
-model nutrition_facts {
-  id         Int      @id @default(autoincrement())
-  product_id Int
-  serve_size String
-  kcal       String
-  fat        String
-  protein    String
-  natrium    String
-  sugar      String
-  caffeine   String
-  products   products @relation(fields: [product_id], references: [id])
+model NutritionFact {
+  id        Int     @id @default(autoincrement())
+  productId Int     @map("product_id")
+  serveSize String  @map("serve_size")
+  kcal      Float   @db.Double
+  fat       Float   @db.Double
+  protein   Float   @db.Double
+  natrium   Float   @db.Double
+  sugar     Float   @db.Double
+  caffeine  Float   @db.Double
+  products  Product @relation(fields: [productId], references: [id])
+
+  @@map("nutrition_facts")
 }
 
-model users {
-  id            Int     @id @default(autoincrement())
-  email         String  @unique
-  password      String
-  username      String?
-  address       String?
-  phone_number  String?
-  policy_agreed Boolean @default(true)
+model User {
+  id           Int     @id @default(autoincrement())
+  email        String  @unique @db.VarChar(100)
+  password     String  @db.VarChar(100)
+  username     String? @db.VarChar(100)
+  address      String? @db.VarChar(100)
+  phoneNumber  String? @map("phone_number") @db.VarChar(100)
+  policyAgreed Boolean @default(true) @map("policy_agreed")
+
+  @@map("users")
 }

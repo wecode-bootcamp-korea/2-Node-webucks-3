@@ -3,21 +3,10 @@ import Prisma from '@prisma/client';
 const { PrismaClient } = Prisma;
 const route = express.Router();
 
-const { users } = new PrismaClient();
+const prisma = new PrismaClient();
 
 route.get('/', async (req, res) => {
-  const route = await users.findMany({
-    select: {
-      id: true,
-      email: true,
-      password: true,
-      username: true,
-      address: true,
-      phone_number: true,
-      policy_agreed: true,
-    },
-  });
-
+  const route = await prisma.$queryRaw`SELECT * FROM users`;
   res.json(route);
 });
 
@@ -25,16 +14,10 @@ route.post('/', async (req, res) => {
   const { email, password, username, address, phone_number, policy_agreed } =
     req.body;
 
-  const newUser = await users.create({
-    data: {
-      email,
-      password,
-      username,
-      address,
-      phone_number,
-      policy_agreed,
-    },
-  });
+  const newUser = await prisma.$queryRaw`
+  INSERT INTO users (email, password, username, address, phone_number, policy_agreed)
+  VALUES (${email}, ${password}, ${username}, ${address}, ${phone_number}, ${policy_agreed})
+  `;
 
   res.json(newUser);
 });

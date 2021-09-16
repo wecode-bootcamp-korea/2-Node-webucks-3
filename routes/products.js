@@ -3,17 +3,12 @@ import Prisma from '@prisma/client';
 const { PrismaClient } = Prisma;
 const routeProd = express.Router();
 
-const { products } = new PrismaClient();
+const prisma = new PrismaClient();
 
 routeProd.get('/', async (req, res) => {
-  const getProd = await products.findMany({
-    select: {
-      id: true,
-      category_id: true,
-      korean_name: true,
-      english_name: true,
-    },
-  });
+  const getProd = await prisma.$queryRaw`
+  SELECT * FROM products
+  `;
 
   res.json(getProd);
 });
@@ -21,13 +16,10 @@ routeProd.get('/', async (req, res) => {
 routeProd.post('/', async (req, res) => {
   const { category_id, korean_name, english_name } = req.body;
 
-  const newProduct = await products.create({
-    data: {
-      category_id,
-      korean_name,
-      english_name,
-    },
-  });
+  const newProduct = await prisma.$queryRaw`
+  INSERT INTO products (category_id, korean_name, english_name)
+  VALUES (${category_id}, ${korean_name}, ${english_name})
+  `;
 
   res.json(newProduct);
 });
