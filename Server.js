@@ -7,7 +7,7 @@ import routeCategory from './routes/categories.js';
 dotenv.config();
 const app = express();
 app.use(express.json());
-const PORT = 8000 | process.env.PORT;
+const PORT = 7777 | process.env.PORT;
 
 app.get('/', (req, res) => {
   res.send('Hello, I am working!');
