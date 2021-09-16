@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// model Post {
+//   id        Int     @id @default(autoincrement())
+//   title     String
+//   content   String?
+//   published Boolean @default(false)
+//   author    User?   @relation(fields: [authorId], references: [id])
+//   authorId  Int?
+// }
+
+model Category {
+  id   Int    @id @default(autoincrement()) @db.TinyInt
+  name String @db.VarChar(16)
+  // Product Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id          Int    @id @default(autoincrement()) @db.TinyInt
+  koreanName  String @map("korean_name") @db.VarChar(50)
+  englishName String @map("english_name") @db.VarChar(50)
+  categoryId  Int    @map("category_id") @db.TinyInt
+
+  @@map("products")
+}
+
+model Image {
+  id        Int    @id @default(autoincrement()) @db.TinyInt
+  imageUrl  String @db.VarChar(100)
+  productId Int    @map("product_id") @db.TinyInt
+
+  @@map("images")
+}
+
+model Allergy {
+  id   Int    @id @default(autoincrement()) @db.TinyInt
+  name String @db.VarChar(16)
+
+  @@map("allergies")
+}
+
+model ProductAllergy {
+  id        Int @id @default(autoincrement()) @db.TinyInt
+  productId Int @map("product_id") @db.TinyInt
+  allergyId Int @map("allergy_id") @db.TinyInt
+
+  @@map("product_allergies")
+}
+
+model Nutrition {
+  id        Int    @id @default(autoincrement()) @db.TinyInt
+  name      String @db.VarChar(16)
+  productId Int    @map("product_id") @db.TinyInt
+  amount    Int
+
+  @@map("nutritions")
+}
+
+model User {
+  id    Int    @id @default(autoincrement()) @db.TinyInt
+  email String @db.VarChar(16)
+
+
+  @@map("users")
+}
