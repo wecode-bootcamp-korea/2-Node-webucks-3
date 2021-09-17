@@ -26,7 +26,6 @@
   "dependencies": {
     "@prisma/client": "^3.0.2"
   },
-  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wecode-bootcamp-korea/2-Node-webucks-3.git"
