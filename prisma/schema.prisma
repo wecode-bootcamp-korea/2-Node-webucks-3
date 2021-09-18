@@ -37,7 +37,7 @@ model Nutrition {
   fat       Float   @db.Double
   protein   Float   @db.Double
   sodium    Float   @db.Double
-  Sugar     Float   @db.Double
+  sugar     Float   @db.Double
   caffeine  Float   @db.Double
 
   @@map("nutritions")

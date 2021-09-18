@@ -22,33 +22,14 @@ app.get("/categories_page", async (req, res) => {
   res.json(category);
 });
 
-// 제품 POST
-app.post("/products", async (req, res) => {
-  await prisma.$queryRaw`
-  INSERT INTO products 
-  (korean_name, english_name, category_id)
-  VALUES ("콜드 브루 오트 라떼", "Cold Brew Oat Latte", 1)
-  `;
-});
-
-// 제품 GET - id에 따라 가져오기
-app.get("/products/:id", async (req, res) => {
-  const { id } = req.params;
-  const [product] = await prisma.$queryRaw`
-  SELECT p.id, p.korean_name, p.english_name
-  FROM products p
-  WHERE p.id=${id}
-  ;`;
-  res.json(product);
-});
-
 // 2> 리스트 페이지 GET
 app.get("/list_page", async (req, res) => {
   const list = await prisma.$queryRaw`
-  SELECT c.id, c.name, p.korean_name, p.english_name, p.category_id, p.id
-  FROM categories c
-  JOIN products p
-  ON p.category_id = c.id
+    SELECT p.id,
+    p.korean_name,
+    i.image_url
+    FROM products AS p
+    LEFT JOIN images AS i ON p.id = i.id
   ;`;
   res.json(list);
 });
@@ -96,42 +77,57 @@ app.get("/images", async (req, res) => {
   res.json(image);
 });
 
-// 3> 디테일 페이지
-app.get("/detail_page", async (req, res) => {
-  const detail = await prisma.$queryRaw`
-  SELECT p.korean_name, p.english_name, p.category_id, p.id, n.product_id, n.calory, n.fat, n.protein, n.sodium, n.sugar, n.caffeine, i.image_url, i.product_id
-  FROM products p
-  JOIN images i
-  ON i.product_id = p.id
-  JOIN nutritions n
-  ON n.product_id = p.id
-  ;`;
-  res.json(detail);
+// 제품 POST
+app.post("/detail_page", async (req, res) => {
+  await prisma.$queryRaw`
+  INSERT INTO products 
+  (korean_name, english_name, category_id)
+  VALUES ("콜드 브루 오트 라떼", "Cold Brew Oat Latte", 1)
+  `;
 });
 
-// app.use(express.json());
+// 3> 제품 상세 정보 GET - id에 따라 가져오기
+app.get("/detail_page/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const detailProducts = await prisma.$queryRaw`
+    SELECT p.id AS product_id, p.korean_name, p.english_name,
+    i.image_url,
+    n.calory, n.fat, n.protein, n.sodium, n.sugar, n.caffeine, 
+      (select group_concat(a.name, '')
+      FROM products_allergies pa
+          , allergies a
+          WHERE pa.allergy_id = a.id
+          AND pa.product_id = p.id
+      ) as allergy_name
+    FROM products p
+    LEFT JOIN images i ON i.product_id = p.id
+    LEFT JOIN nutritions n ON n.product_id = p.id
+    WHERE p.id IN (${id})
+    ;`;
+  res.json(detailProducts);
+});
 
 app.post("/users/signup", async (req, res) => {
-  const createUser = await prisma.$queryRaw`
-    INSERT INTO users (email, password, user_name, address, phone_number, policy_agreed) 
-    VALUES ('minjae2246@gmail.com', 'minjae', '김민재', '서울 동대문구 회기동', '01022462294', true),
-    ('const.wonkook@gmail.com', 'wonkook', '이원국', '서울 종각 위워크', '01098055494', true),
-    ('1mlmf2mpmf3@gmail.com', 'yoonjin', '김윤진', '서울 강남구 위워크', '01026990244', true),
-    ('jhyunk218@gmail.com', 'jihuyn', '김지현', '서울 중랑구 위워크', '01077096203', true),
-    ('jaewon.walks@gmail.com', 'jaewon', '김재원', '서울 마포구 위워크', '01064361413', true)    
+  try {
+    const { password, email } = req.body;
+    const createdUser = await prisma.$queryRaw`
+    INSERT INTO users 
+    (email, password)
+    VALUES (${email}, ${password})
     ;`;
-  res.json(createUser);
+    res.send({ message: "회원가입에 성공했습니다" });
+  } catch (error) {
+    if (error.meta.code == "1062") {
+      res.send({
+        message: "이미 가입된 이메일입니다. 다른 이메일을 사용해주세요",
+      });
+    }
+  }
 });
 
 app.get("/", (req, res) => {
   res.send("Hello");
-});
-
-app.use(function (err, req, res, next) {
-  console.error(err.stack);
-  res.status(500).json({
-    message: "something wrong!",
-  });
 });
 
 app.listen(PORT, () => console.log(`server on ${PORT}`));
