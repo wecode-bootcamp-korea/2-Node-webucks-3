@@ -1,20 +1,15 @@
 import http from "http";
 import express from "express";
 import dotenv from "dotenv";
-import categoriesRouter from "./routes/categoriesRouter";
-import listsRouter from "./routes/listsRouter";
-import detailsRouter from "./routes/detailsRouter";
-import usersRouter from "./routes/usersRouter";
+import router from "./routes";
 
 dotenv.config();
 
 const app = express();
 
 app.use(express.json());
-app.use(categoriesRouter);
-app.use(listsRouter);
-app.use(detailsRouter);
-app.use(usersRouter);
+app.use(router);
+
 app.get("/", (req, res) => res.send("Server is start"));
 
 const server = http.createServer(app);

@@ -17,10 +17,10 @@ const createUser = async (req, res) => {
     const user = await usersService.createUser(req, res);
     res.status(200).send({
       message: "CREATE",
+      data: user,
     });
-    return res.json(user);
   } catch (error) {
-    res.send({ error: "이미 중복된 회원입니다." });
+    res.json({ error: "중복된 이메일입니다. 다른 이메일을 사용하세요" });
   }
 };
 

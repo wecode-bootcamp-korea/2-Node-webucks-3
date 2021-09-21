@@ -1,5 +1,38 @@
 import prisma from "../prisma";
 
+const getAllCategories = async () => {
+  return await prisma.$queryRaw`
+  SELECT c.id, c.name
+  FROM categories c;`;
+};
+
+const getCategoryById = async (req, res) => {
+  const { id } = req.params;
+  return await prisma.$queryRaw`
+  SELECT c.id, c.name
+  FROM categories c
+  WHERE c.id = ${id}
+  ;`;
+};
+
+const getAllList = async () => {
+  return await prisma.$queryRaw`
+    SELECT p.id, p.korean_name, i.image_url
+    FROM products p
+    LEFT JOIN images i ON p.id = i.id
+  ;`;
+};
+
+const getListById = async (req, res) => {
+  const { id } = req.params;
+  return await prisma.$queryRaw`
+    SELECT p.id, p.korean_name, i.image_url
+    FROM products p
+    LEFT JOIN images i ON p.id = i.id
+    WHERE p.id = ${id}
+    ;`;
+};
+
 const getAllDetail = async () => {
   return await prisma.$queryRaw`    
     SELECT p.id AS product_id, p.korean_name, p.english_name,
@@ -36,4 +69,11 @@ const getDetailById = async (req, res) => {
   ;`;
 };
 
-module.exports = { getAllDetail, getDetailById };
+module.exports = {
+  getAllCategories,
+  getCategoryById,
+  getAllList,
+  getListById,
+  getAllDetail,
+  getDetailById,
+};

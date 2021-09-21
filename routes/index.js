@@ -1,10 +1,10 @@
-// import express from "express";
-// const router = express.Router();
+import express from "express";
+const router = express.Router();
 
-// import ProductRouter from "./productRouter";
-// // import ProductRouter from "./productRouter";
+import productsRouter from "./productsRouter";
+import usersRouter from "./usersRouter";
 
-// router.use("/categories", ProductRouter);
-// // router.use("/users", UserRouter);
-//
-// module.exports = router;
+router.use("/users", usersRouter);
+router.use("/products", productsRouter);
+
+module.exports = router;
