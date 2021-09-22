@@ -9,7 +9,7 @@ const createUser = async (req, res) => {
     return await usersDao.createUser(req, res);
   } catch (error) {
     if (error.meta.code === "1062") {
-      throw new Error(error);
+      throw "이미 중복된 이메일입니다. 다른 이메일을 사용해주세요.";
     }
   }
 };

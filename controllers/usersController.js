@@ -20,7 +20,7 @@ const createUser = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    res.json({ error: "중복된 이메일입니다. 다른 이메일을 사용하세요" });
+    res.json(error);
   }
 };
 
