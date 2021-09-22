@@ -240,3 +240,12 @@ tags
 [._]\*.un~
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,node,linux,vim
+
+# memo
+
+ans-server-module.js
+ans-index.js
+ans-userRouter-module.js
+ans-userController-module.js
+ans-userService-module.js
+ans-userDao-module.js
