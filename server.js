@@ -63,6 +63,9 @@ app.get('/products/2', async (req, res) => {
   res.json(productDetail);
 });
 
+
+// 누가 http로 카테고리 추가하려 하진 않겠지만 post 복습용 코드
+// 헷갈림
 app.post('/categories', async (req, res)=> {
   let category = req.body.category;
   const categories = await prisma.$queryRaw`
@@ -80,12 +83,14 @@ app.post('/categories', async (req, res)=> {
   console.log(res.json(showCategories));
 })
 
+// 🍀 users엔드포인트에서, post메소드로 요청할 때(회원가입페이지)
+// 헷갈림
 app.post('/users', async (req, res) => {
-
+  //실습하다가 오류나는 거 보기 위해서 쓴 try catch문
   try {
-    // //구조분해할당
+    //구조분해할당
     let { email, address, password, phone_number, policy_agreed, username } = req.body;
-
+    //함수 선언할 때, 안에 리턴하는 거 없이 콘솔만 찍어도 무방하긴 했던 것처럼
     await prisma.$queryRaw`
     INSERT INTO
       users (
@@ -106,17 +111,15 @@ app.post('/users', async (req, res) => {
     );
     `;
     //post잘되었는지 확인받는 response (프론트를 위해) //반환이 먼저 되면 안되니까 위엔 await
-    //아래를 안써주면 뱅글뱅글 돌기만 하고, 기다리기만 함. 종료가 안됨.
-    //ORM일 때!
-
+    //아래를 안써주면 뱅글뱅글 돌기만 하고, 기다리기만 함. 종료가 안됨. 왜그런진 일단 이해 안됨
     const users = await prisma.$queryRaw`
       SELECT *
       FROM users
       ORDER BY id DESC
       LIMIT 1
     `;
-    
     res.status(201).json(users);
+
   } catch (err) {
     console.log('@@@@@@@@@@@@@@@@@@');
     console.log(req.body.email);
