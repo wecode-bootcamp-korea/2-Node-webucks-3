@@ -24,6 +24,7 @@
     "prisma": "^3.0.2"
   },
   "dependencies": {
-    "@prisma/client": "^3.0.2"
+    "@prisma/client": "^3.0.2",
+    "body-parser": "^1.19.0"
   }
 }
