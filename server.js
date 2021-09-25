@@ -58,29 +58,35 @@ app.get('/products/2', async (req, res) => {
     SELECT * from product_allergies
     SELECT * from allergies;
     `;
-  }
+  } //JOIN한 것 가져오는 게 좋았으려나?
   const productDetail = getProductDetail();
   res.json(productDetail);
 });
 
 
 // 누가 http로 카테고리 추가하려 하진 않겠지만 post 복습용 코드
-// 헷갈림
 app.post('/categories', async (req, res)=> {
-  let category = req.body.category;
-  const categories = await prisma.$queryRaw`
-    INSERT INTO categories (name)
-    VALUES (${category});
-  `;
+  let category = req.body.category; //post메소드니까, body에 디비에올리고싶은데이터 {키:값} 형태로 있겠지. 
 
-  const showCategories = await prisma.$queryRaw`
+  //categories라는 변수에, prisma에서 rawquery로 가져온 데이터를 담는다고 생각하고 아래처럼 적으면 안 되는 거였나? => 아니, 괜찮아. (왜)
+  const categories = await prisma.$queryRaw`
+  INSERT INTO categories (name)
+  VALUES (${category});
+  `; 
+
+  const [showCategories] = await prisma.$queryRaw`
   SELECT *
   FROM categories
   ORDER BY id DESC
-  LIMIT 1
-  `
-  res.status(201).json(categories);
-  console.log(res.json(showCategories));
+  LIMIT 1;
+  `;
+
+  res.json(showCategories);
+  //res.status.json(categories)
+  //res.json(categories)
+  //모두 [object Object] 나옴
+  console.log(showCategories); //{id: 5, name: '블렌디드'}
+
 })
 
 // 🍀 users엔드포인트에서, post메소드로 요청할 때(회원가입페이지)
@@ -91,7 +97,7 @@ app.post('/users', async (req, res) => {
     //구조분해할당
     let { email, address, password, phone_number, policy_agreed, username } = req.body;
     //함수 선언할 때, 안에 리턴하는 거 없이 콘솔만 찍어도 무방하긴 했던 것처럼
-    await prisma.$queryRaw`
+    const createUser = await prisma.$queryRaw`
     INSERT INTO
       users (
         email, 
@@ -112,22 +118,15 @@ app.post('/users', async (req, res) => {
     `;
     //post잘되었는지 확인받는 response (프론트를 위해) //반환이 먼저 되면 안되니까 위엔 await
     //아래를 안써주면 뱅글뱅글 돌기만 하고, 기다리기만 함. 종료가 안됨. 왜그런진 일단 이해 안됨
-    const users = await prisma.$queryRaw`
-      SELECT *
-      FROM users
+    const userCreated = await prisma.$queryRaw`
+      SELECT u.email, u.username
+      FROM users as u
       ORDER BY id DESC
       LIMIT 1
     `;
-    res.status(201).json(users);
-
+    res.status(201).json(`회원가입에 성공하였습니다. 이메일과 유저네임 : ${userCreated}`);
   } catch (err) {
-    console.log('@@@@@@@@@@@@@@@@@@');
-    console.log(req.body.email);
-    console.log(req.body.policy_agreed);
-    console.log(req.params);
-    console.log(res.statusCode);
-    console.log('@@@@@@@@@@@@@@@@@@');
-    console.log(err);
+    res.status(400).json({message: '회원정보 입력 양식을 지켜 주세요'}) //입력양식 안 지킨 걸, 여기서 catch(err)로 잡는 건 아닐 것 같지만
   }
 
 });
