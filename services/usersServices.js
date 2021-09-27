@@ -1,12 +1,47 @@
 import { usersDao } from "../models/";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const getAllUser = async () => {
   return await usersDao.getAllUser();
 };
 
-const createUser = async (req, res) => {
+const makeHash = async (password) => {
+  return await bcrypt
+    .genSalt()
+    .then((salt) => {
+      return bcrypt.hash(password, salt);
+    })
+    .catch((err) => console.error(err.message));
+};
+
+const getUserEmail = async (req, res) => {
+  const { email, password } = req.body;
+  const [userInfo] = await usersDao.getUserInfo(email);
+  if (userInfo === undefined) {
+    throw "가입된 이메일이 아닙니다.";
+  }
   try {
-    return await usersDao.createUser(req, res);
+    const validPsw = await bcrypt.compare(password, userInfo.password);
+    if (validPsw) {
+      return res.status(200).json({ message: "로그인에 성공하셨습니다." });
+    } else {
+      return res.status(200).json({ message: "잘못된 비밀번호입니다." });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const createUser = async (email, password) => {
+  try {
+    // const [userInfo] = await usersDao.getUserInfo(email);
+    // const makeToken = jwt.sign(userInfo.id, "secretKey", {
+    //   expiresIn: "1h",
+    // });
+    // console.log(makeToken());
+    const hashedPsw = await makeHash(password);
+    return await usersDao.createUser(email, hashedPsw);
   } catch (error) {
     if (error.meta.code === "1062") {
       throw "이미 중복된 이메일입니다. 다른 이메일을 사용해주세요.";
@@ -14,4 +49,4 @@ const createUser = async (req, res) => {
   }
 };
 
-module.exports = { getAllUser, createUser };
+module.exports = { getAllUser, createUser, getUserEmail };

@@ -2,15 +2,9 @@ import http from "http";
 import express from "express";
 import dotenv from "dotenv";
 import router from "./routes";
+import app from "./app";
 
 dotenv.config();
-
-const app = express();
-
-app.use(express.json());
-app.use(router);
-
-app.get("/", (req, res) => res.send("Server is start"));
 
 const server = http.createServer(app);
 const { PORT } = process.env;

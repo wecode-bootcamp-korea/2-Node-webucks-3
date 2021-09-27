@@ -14,9 +14,10 @@ const getAllUser = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const user = await usersService.createUser(req, res);
+    const { email, password } = req.body;
+    const user = await usersService.createUser(email, password);
     res.status(200).send({
-      message: "CREATE",
+      message: "SUCCESS REGISTER",
       data: user,
     });
   } catch (error) {
@@ -24,4 +25,12 @@ const createUser = async (req, res) => {
   }
 };
 
-module.exports = { getAllUser, createUser };
+const loginUser = async (req, res) => {
+  try {
+    return await usersService.getUserEmail(req, res);
+  } catch (error) {
+    res.json(error);
+  }
+};
+
+module.exports = { getAllUser, createUser, loginUser };
