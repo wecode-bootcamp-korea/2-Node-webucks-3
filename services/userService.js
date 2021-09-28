@@ -1,10 +1,8 @@
 import userModel from '../models/userModel';
 
-
-
-const createUser = async (req) => {
+const createUser = async (email, address, password, phone_number, policy_agreed, username ) => {
   //post메소드면 return 굳이 안 하나?
-  let { email, password, username } = req.body;
+  
   if (!(email && password && username)) { 
     res.status(400).json({message: '필수 항목을 입력해주세요'}) 
   } else {
@@ -19,4 +17,8 @@ const userCreated = async (req) => {
   return await userModel.userCreated();
 }
 
-export default {createUser, userCreated};
+const getUser = async (req) => {
+  return await userModel.getUser();
+};
+
+export default {createUser, userCreated, getUser};
