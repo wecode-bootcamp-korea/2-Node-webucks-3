@@ -4,7 +4,7 @@ const getAllUser = async (req, res) => {
   try {
     const users = await usersService.getAllUser();
     res.status(200).send({
-      message: "SUCCEED",
+      message: "SUCCESS RESPONSE",
       data: users,
     });
   } catch (error) {
@@ -15,10 +15,9 @@ const getAllUser = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await usersService.createUser(email, password);
-    res.status(200).send({
-      message: "SUCCESS REGISTER",
-      data: user,
+    await usersService.createUser(email, password);
+    return res.json({
+      message: "SUCCESS CREATE",
     });
   } catch (error) {
     res.json(error);

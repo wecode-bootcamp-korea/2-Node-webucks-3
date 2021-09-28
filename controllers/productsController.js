@@ -5,7 +5,6 @@ const getAllCategories = async (req, res) => {
   res.json(categories);
 };
 
-//req처리하는 걸 컨트롤러에서 받아서 req.body만 넘기기
 const getCategoryById = async (req, res) => {
   const categoryById = await productsService.getCategoryById(req, res);
   res.json(categoryById);
@@ -39,4 +38,3 @@ module.exports = {
   getAllDetail,
   getDetailById,
 };
-// 2. 추각코 공부 키워드 : export vs export default vs module

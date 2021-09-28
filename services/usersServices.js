@@ -1,6 +1,9 @@
 import { usersDao } from "../models/";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const getAllUser = async () => {
   return await usersDao.getAllUser();
@@ -22,9 +25,19 @@ const getUserEmail = async (req, res) => {
     throw "가입된 이메일이 아닙니다.";
   }
   try {
+    const makeToken = await jwt.sign(
+      { id: userInfo.id },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1h" }
+    );
+    const decoded = jwt.verify(makeToken, process.env.ACCESS_TOKEN_SECRET);
+    console.log(decoded);
     const validPsw = await bcrypt.compare(password, userInfo.password);
     if (validPsw) {
-      return res.status(200).json({ message: "로그인에 성공하셨습니다." });
+      res.status(200).send({
+        message: "로그인에 성공하셨습니다.",
+      });
+      return res.cookie("");
     } else {
       return res.status(200).json({ message: "잘못된 비밀번호입니다." });
     }
@@ -35,11 +48,6 @@ const getUserEmail = async (req, res) => {
 
 const createUser = async (email, password) => {
   try {
-    // const [userInfo] = await usersDao.getUserInfo(email);
-    // const makeToken = jwt.sign(userInfo.id, "secretKey", {
-    //   expiresIn: "1h",
-    // });
-    // console.log(makeToken());
     const hashedPsw = await makeHash(password);
     return await usersDao.createUser(email, hashedPsw);
   } catch (error) {
