@@ -1,13 +1,13 @@
 import express from 'express';
 
 import categoryRouter from './categoryRouter'
+import productRouter from './productRouter'
 
-const router = express.Router();
+const app = express();
 
-//미들웨어: .use() 쓸 수 있음
 //라우트: HTTP메소드 라우트인 .get('/', 콜백함수) 쓸 수 있음
+app.use('/products/category', categoryRouter)
+app.use('/products', productRouter)
 
-//use로, 미들웨어 설정해주면, 더 직관적으로 라우팅 관리가능
-router.use('/products/category', categoryRouter)
-
-export default router;
+//이렇게만 하면 router가 객체가 변한 것이 export되나?
+export default app;

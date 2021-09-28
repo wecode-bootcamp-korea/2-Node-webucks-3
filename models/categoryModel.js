@@ -9,5 +9,3 @@ const getCategory = async () => {
 }
 
 export default {getCategory};
-console.log('>>>model exported what')
-console.log(module.exports)

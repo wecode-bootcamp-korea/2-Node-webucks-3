@@ -13,9 +13,10 @@ const PORT = 8000 | process.env.PORT;
 
 // // to solve req.body == undefined
 // // 미들웨어
-// app.use(express.json()); 
+app.use(express.json()); 
 
-// app.use('/', router);
+app.use(router);
+app.get("/", (req, res) => res.send("Server is start"));
 
 const start = async () => {
   try {

@@ -1,19 +1,16 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model Category {
   id      Int       @id @default(autoincrement()) @db.TinyInt
   name    String    @db.VarChar(16)
-  product Product[] //[]를 뒤에다 적어주는 건...1:다라서, Product테이블에 대응되는 로우가 많이 들어갈 수 있다는 거?!
+  product Product[]
 
   @@map("categories")
 }
@@ -22,9 +19,10 @@ model Product {
   id          Int      @id @default(autoincrement()) @db.TinyInt
   koreanName  String   @map("korean_name") @db.VarChar(50)
   englishName String   @map("english_name") @db.VarChar(50)
-  category    Category @relation(fields: [categoryId], references: [id])
   categoryId  Int      @map("category_id") @db.TinyInt
+  category    Category @relation(fields: [categoryId], references: [id])
 
+  @@index([categoryId], map: "products_category_id_fkey")
   @@map("products")
 }
 
@@ -63,11 +61,11 @@ model Nutrition {
 model User {
   id            Int     @id @default(autoincrement()) @db.TinyInt
   email         String  @unique @db.VarChar(50)
-  password      String  @db.VarChar(50)
-  username      String? @db.VarChar(16)
   address       String? @db.VarChar(100)
+  password      String  @db.VarChar(50)
   phone_number  String? @db.VarChar(16)
   policy_agreed Boolean @default(true)
+  username      String? @db.VarChar(16)
 
   @@map("users")
 }
