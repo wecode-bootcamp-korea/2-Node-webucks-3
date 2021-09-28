@@ -1,15 +1,12 @@
 import { prisma } from "../prisma"
-import {hash} from "bcryptjs";
 
-const saltRounds = 10;
-const addUser = async (email, password, username, address, phone_number, policy_agreed) => {
-  const hashedPassword = await hash(password, saltRounds);
+const addUser = async (email, password, hashedPassword, username, address, phoneNumber, policyAgreed) => {
   return await prisma.$queryRaw`
     INSERT INTO
       users (
         email,
         password,
-        hashedPassword,
+        hashed_password,
         username,
         address,
         phone_number,
@@ -21,10 +18,23 @@ const addUser = async (email, password, username, address, phone_number, policy_
       ${hashedPassword},
       ${username},
       ${address},
-      ${phone_number},
-      ${policy_agreed}
+      ${phoneNumber},
+      ${policyAgreed}
     )
   `
 }
 
-module.exports = { addUser };
+const checkUser = async(email) => {
+  return await prisma.$queryRaw`
+    SELECT
+      u.email,
+      u.password,
+      u.hashed_password,
+      u.username
+    FROM
+      users u
+    WHERE u.email = ${email};
+  `;
+}
+
+module.exports = { addUser, checkUser };

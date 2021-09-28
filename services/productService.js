@@ -5,9 +5,9 @@ const getAllProducts = async () => {
   return products;
 }
 
-const getSomeProduct = async (id) => {
-  const product = await productDao.getSomeProduct(id);
+const getProduct = async (id) => {
+  const product = await productDao.getProduct(id);
   return product;
 }
 
-module.exports = { getAllProducts, getSomeProduct };
+module.exports = { getAllProducts, getProduct };

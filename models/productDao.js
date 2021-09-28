@@ -14,7 +14,7 @@ const getAllProducts = async () => {
     `;
 }
 
-const getSomeProduct = async(id) => {
+const getProduct = async(id) => {
   return await prisma.$queryRaw`
     SELECT
       i.image_url,
@@ -41,4 +41,4 @@ const getSomeProduct = async(id) => {
   `;
 }
 
-module.exports = { getAllProducts, getSomeProduct };
+module.exports = { getAllProducts, getProduct };

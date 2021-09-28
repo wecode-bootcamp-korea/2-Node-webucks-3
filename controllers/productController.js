@@ -9,14 +9,14 @@ const getAllProducts = async (req, res) => {
   }
 }
 
-const getSomeProduct = async (req, res) => {
+const getProduct = async (req, res) => {
   const {id} = req.params;
   try{
-    const product = await productService.getSomeProduct(id);
+    const product = await productService.getProduct(id);
     res.status(201).json(product);
   } catch (err) {
     console.log(err);
   }
 }
 
-module.exports = { getAllProducts, getSomeProduct };
+module.exports = { getAllProducts, getProduct };
