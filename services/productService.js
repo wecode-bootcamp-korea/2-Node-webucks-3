@@ -5,8 +5,10 @@ const getProductList = async () => {
   return category;
 };
 
-const getProductDetail = async () => {
-  const category = await productModel.getProductDetail;
+const getProductDetail = async (productId) => {
+  console.log('<<<<<<<<')
+  console.log(typeof productId)
+  const category = await productModel.getProductDetail(productId); //()없었는데..
   return category;
 };
 

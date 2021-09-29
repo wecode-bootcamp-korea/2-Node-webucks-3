@@ -4,7 +4,13 @@ import userService from '../services/userService'
 const createUser = async (req, res) => {
   let { email, address, password, phone_number, policy_agreed, username } = req.body;
   await userService.createUser(email, address, password, phone_number, policy_agreed, username); 
-  res.json(userService.userCreated()); 
+  res.json(userService.userCreated(email, address, password, phone_number, policy_agreed, username ));  //여기선 인자 다 안넘겨주나 그냥 ()빈걸루?
+}
+
+const loginUser = async (req, res) => {
+  let { email, address, password, phone_number, policy_agreed, username } = req.body;
+  await userService.loginUser(email, address, password, phone_number, policy_agreed, username); 
+  res.status(201).json({message : 'LOGIN SUCCESS!'}); 
 }
 
 const getUser = async (req, res) => {
@@ -17,4 +23,4 @@ const getUser = async (req, res) => {
 }
 
 
-export default {createUser, getUser};
+export default {createUser, loginUser, getUser};

@@ -6,8 +6,9 @@ const getProductList = async (req, res) => {
 }
 
 const getProductDetail = async (req, res) => {
-  const productDetail = await productService.getProductDetail();
-  res.json(productDetail);
+  const productId = Number(req.params.productId);
+  const productDetail = await productService.getProductDetail(productId);
+  res.status(200).json(productDetail);
 }
 
 export default {getProductList, getProductDetail};

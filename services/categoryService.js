@@ -5,4 +5,4 @@ const getCategory = async () => {
   return category;
 };
 
-export default {getCategory};
+export default { getCategory };

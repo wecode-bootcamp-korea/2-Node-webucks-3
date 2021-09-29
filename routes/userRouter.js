@@ -4,8 +4,8 @@ import checkAuth from '../middlewares/checkAuth'
 
 const userRouter = express.Router();
 
-// 🍀 users엔드포인트에서, post메소드로 요청할 때(회원가입페이지)
 userRouter.post('/signup', userController.createUser);
-userRouter.get('', checkAuth, userController.getUser);
+userRouter.post('/signin', userController.loginUser);
+userRouter.get('', checkAuth, userController.getUser); //내 회원정보 조회
 
 export default userRouter;
