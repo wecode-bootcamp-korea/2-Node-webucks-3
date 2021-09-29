@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
-import AppError from '../utils/appError';
-import catchAsyncWrap from '../utils/catchAsyncWrap';
+import utils from '../utils';
 
 export const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
@@ -31,7 +30,7 @@ export const createSendToken = (user, statusCode, res) => {
   });
 };
 
-export const protect = catchAsyncWrap(async (req, res, next) => {
+export const protect = utils.catchAsyncWrap(async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&
@@ -41,13 +40,17 @@ export const protect = catchAsyncWrap(async (req, res, next) => {
   }
 
   if (!token) {
-    return next(new AppError('당신은 회원 정보를 조회할 토큰이 없습니다', 401));
+    return next(
+      new utils.AppError('당신은 회원 정보를 조회할 토큰이 없습니다', 401)
+    );
   }
 
   const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY);
 
   if (decoded.id !== 'admin@admin.com') {
-    return next(new AppError('당신은 회원 정보를 조회할 권한이 없습니다', 401));
+    return next(
+      new utils.AppError('당신은 회원 정보를 조회할 권한이 없습니다', 401)
+    );
   }
   next();
 });

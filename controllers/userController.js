@@ -2,10 +2,9 @@ import dotenv from 'dotenv';
 dotenv.config({ path: './config.env' });
 import { userService } from '../services';
 import { createSendToken } from './tokenController';
-import AppError from '../utils/appError';
-import catchAsyncWrap from '../utils/catchAsyncWrap';
+import utils from '../utils';
 
-export const getAllUsers = catchAsyncWrap(async (req, res, next) => {
+export const getAllUsers = utils.catchAsyncWrap(async (req, res, next) => {
   const users = await userService.getAllUsers();
   res.status(200).json({
     status: 'success',
@@ -13,7 +12,7 @@ export const getAllUsers = catchAsyncWrap(async (req, res, next) => {
   });
 });
 
-export const signup = catchAsyncWrap(async (req, res, next) => {
+export const signup = utils.catchAsyncWrap(async (req, res, next) => {
   const newUser = {
     email: req.body.email,
     password: req.body.password,
@@ -25,7 +24,7 @@ export const signup = catchAsyncWrap(async (req, res, next) => {
   Object.values(newUser).forEach(ele => {
     if (ele !== 'policy_agreed') {
       if (!ele) {
-        return next(new AppError('불완전한 회원정보!', 400));
+        return next(new utils.AppError('불완전한 회원정보!', 400));
       }
     }
   });
@@ -36,20 +35,22 @@ export const signup = catchAsyncWrap(async (req, res, next) => {
   });
 });
 
-export const login = catchAsyncWrap(async (req, res, next) => {
+export const login = utils.catchAsyncWrap(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return next(new AppError('이메일과 패스워드를 주세요', 400));
+    return next(new utils.AppError('이메일과 패스워드를 주세요', 400));
   }
   const user = await userService.login(email, password);
 
   if (!user)
-    return next(new AppError('이메일과 패스워드를 다시 확인해주세요', 401));
+    return next(
+      new utils.AppError('이메일과 패스워드를 다시 확인해주세요', 401)
+    );
 
   createSendToken(user, 201, res);
 });
 
-export const updateUser = catchAsyncWrap(async (req, res, next) => {
+export const updateUser = utils.catchAsyncWrap(async (req, res, next) => {
   Object.keys(req.body);
   res.status(201).json({
     foo,

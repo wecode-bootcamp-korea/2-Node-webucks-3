@@ -1,12 +1,12 @@
 import bcrypt from 'bcrypt';
 import { userDao } from '../models';
-import AppError from '../utils/appError.js';
+import utils from '../utils';
 
 export const getAllUsers = async () => {
   try {
     const users = await userDao.getAllUsers();
     if (!users.length) {
-      return new AppError('유저 정보가 없습니다', 404);
+      return new utils.AppError('유저 정보가 없습니다', 404);
     }
     return users;
   } catch (err) {
@@ -29,11 +29,11 @@ export const login = async (email, password) => {
   if (userHash.password) {
     const validPass = await bcrypt.compare(password, userHash.password);
     if (!validPass) {
-      throw new AppError('Wrong password!', 400);
+      throw new utils.AppError('Wrong password!', 400);
     } else {
       return email;
     }
   } else {
-    throw new AppError('User is not exist', 404);
+    throw new utils.AppError('User is not exist', 404);
   }
 };
