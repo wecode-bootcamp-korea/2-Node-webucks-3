@@ -4,20 +4,16 @@ import {
   userLogin,
   signup,
   login,
-  protect,
 } from '../controllers/userController.js';
-import { tokenController } from '../middlewares';
+import { protect } from '../controllers/tokenController.js';
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.status(200).json('Hello!');
+router.post('/test', protect, (req, res) => {
+  res.status(200).json({
+    message: "You're Authorized Person!",
+  });
 });
-
-router.post('/signup', tokenController.verifyToken, createUser);
+router.post('/signup', createUser);
 router.post('/login', userLogin);
-router.post('/verify', tokenController.verifyToken);
-router.post('/testsignup', signup);
-router.post('/testlogin', login);
-router.post('/getAllUsers', protect, login);
 
 export default router;

@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { createUserToDB, searchUserFromDB } from '../models/userDao.js';
+import AppError from '../utils/appError.js';
 
 export const createUserService = async userData => {
   try {
@@ -10,35 +11,17 @@ export const createUserService = async userData => {
   }
 };
 
-export const userLoginService = async userData => {
-  try {
-    const { email, password } = userData;
-    const [userHash] = await searchUserFromDB(email);
-    if (userHash.password) {
-      const validPass = await bcrypt.compare(password, userHash.password);
-      if (!validPass) {
-        throw new Error('Wrong password!');
-      } else {
-        return validPass;
-      }
+export const userLoginService = async (email, password) => {
+  const [userHash] = await searchUserFromDB(email);
+  console.log(userHash);
+  if (userHash.password) {
+    const validPass = await bcrypt.compare(password, userHash.password);
+    if (!validPass) {
+      throw new AppError('Wrong password!', 400);
     } else {
-      throw new Error('User is not exist');
+      return email;
     }
-  } catch (err) {
-    throw err;
+  } else {
+    throw new AppError('User is not exist', 404);
   }
 };
-
-// import jwt from 'jsonwebtoken';
-// export const generateToken = async (req, res, next) => {
-//   try {
-//     const userData = req.body;
-//     await jwt.sign(userData, process.env.JWT_SECRET_KEY, (err, token) => {
-//       if (err) throw new Error('Something went wrong!');
-//       return token;
-//       res.cookie('jwt', token, { maxAge: 30000 });
-//     });
-//   } catch (err) {
-//     throw new Error(err.message);
-//   }
-// };

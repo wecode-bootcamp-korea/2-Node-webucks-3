@@ -21,11 +21,11 @@ export const createUserToDB = async userData => {
 
 export const searchUserFromDB = async email => {
   try {
-    const result = await prisma.$queryRaw`
+    const hashedPw = await prisma.$queryRaw`
     SELECT users.password FROM users WHERE users.email = ${email}
     `;
-    if (!result.length) throw new Error('User is not exist');
-    return result;
+    if (!hashedPw.length) throw new Error('User is not exist');
+    return hashedPw;
   } catch (err) {
     throw err;
   }
