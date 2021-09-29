@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config({ path: './config.env' });
+dotenv.config({ path: `${__dirname}/../config.env` });
 import { userService } from '../services';
 import tokenController from '../middlewares';
 import utils from '../utils';

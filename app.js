@@ -2,7 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 
-dotenv.config({ path: './config.env' });
+dotenv.config({ path: `${__dirname}/../config.env` });
 
 import utils from './utils';
 import { userRoutes, prodRoutes } from './routes';
