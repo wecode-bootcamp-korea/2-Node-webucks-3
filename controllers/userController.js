@@ -29,7 +29,7 @@ export const signup = catchAsyncWrap(async (req, res, next) => {
       }
     }
   });
-  const result = await userService.createUserService(newUser);
+  const result = await userService.registerUser(newUser);
   res.status(201).json({
     status: 'success',
     result,
@@ -41,10 +41,17 @@ export const login = catchAsyncWrap(async (req, res, next) => {
   if (!email || !password) {
     return next(new AppError('이메일과 패스워드를 주세요', 400));
   }
-  const user = await userService.userLoginService(email, password);
+  const user = await userService.login(email, password);
 
   if (!user)
     return next(new AppError('이메일과 패스워드를 다시 확인해주세요', 401));
 
   createSendToken(user, 201, res);
+});
+
+export const updateUser = catchAsyncWrap(async (req, res, next) => {
+  Object.keys(req.body);
+  res.status(201).json({
+    foo,
+  });
 });

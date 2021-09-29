@@ -1,12 +1,8 @@
-import {
-  getProductFromDB,
-  getProductsFromDB,
-  createProductsToDB,
-} from '../services/prodService.js';
+import { prodService } from '../services';
 
 export const getProducts = async (req, res) => {
   try {
-    const products = await getProductsFromDB();
+    const products = await prodService.getProductsFromDB();
     res.status(200).json({
       status: 'success',
       data: products,
@@ -21,7 +17,7 @@ export const getProducts = async (req, res) => {
 
 export const getProduct = async (req, res) => {
   try {
-    const product = await getProductFromDB(req.params.id);
+    const product = await prodService.getProductFromDB(req.params.id);
     res.status(200).json({
       status: 'success',
       product,
@@ -36,7 +32,7 @@ export const getProduct = async (req, res) => {
 
 export const createProducts = async (req, res) => {
   try {
-    const products = await createProductsToDB(req.body);
+    const products = await prodService.createProductsToDB(req.body);
     res.status(200).json({
       status: 'success',
       data: products,

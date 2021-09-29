@@ -1,6 +1,6 @@
 import prisma from '../prisma';
 
-export const createUserToDB = async userData => {
+export const registerUserToDB = async userData => {
   try {
     const doesUserAlreadyExist = await prisma.$queryRaw`
     SELECT users.email FROM users WHERE users.email = ${userData.email}
@@ -40,3 +40,14 @@ export const getAllUsers = async () => {
     throw err;
   }
 };
+
+// export const updateUser = async () => {
+//   await prisma.user.update({
+//     where: {
+//       email: 'viola@prisma.io',
+//     },
+//     data: {
+//       name: 'Viola the Magnificent',
+//     },
+//   });
+// };

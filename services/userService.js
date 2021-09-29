@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
 import { userDao } from '../models';
 import AppError from '../utils/appError.js';
-import catchAsyncWrap from '../utils/catchAsyncWrap';
 
 export const getAllUsers = async () => {
   try {
@@ -15,17 +14,17 @@ export const getAllUsers = async () => {
   }
 };
 
-export const createUserService = async userData => {
+export const registerUser = async userData => {
   try {
     const hash = await bcrypt.hash(userData.password, 10);
-    await userDao.createUserToDB(Object.assign(userData, { hash }));
+    await userDao.registerUserToDB(Object.assign(userData, { hash }));
     return userData.email;
   } catch (err) {
     throw err;
   }
 };
 
-export const userLoginService = async (email, password) => {
+export const login = async (email, password) => {
   const [userHash] = await userDao.searchUserFromDB(email);
   if (userHash.password) {
     const validPass = await bcrypt.compare(password, userHash.password);

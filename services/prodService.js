@@ -1,12 +1,8 @@
-import {
-  getDataFromDB,
-  getDatasFromDB,
-  addProductQuery,
-} from '../models/prodDao.js';
+import { prodDao } from '../models';
 
-export const getProductFromDB = async id => {
+export const getProduct = async id => {
   try {
-    const products = await getDataFromDB(id);
+    const products = await prodDao.getProduct(id);
     if (!products.length) {
       throw new Error("Sorry! There's no data");
     }
@@ -16,9 +12,9 @@ export const getProductFromDB = async id => {
   }
 };
 
-export const getProductsFromDB = async (req, res) => {
+export const getProducts = async (req, res) => {
   try {
-    const products = await getDatasFromDB();
+    const products = await prodDao.getProducts();
     if (!products.length) {
       throw new Error("Sorry! There's no data");
     }
@@ -28,7 +24,7 @@ export const getProductsFromDB = async (req, res) => {
   }
 };
 
-export const createProductsToDB = async data => {
+export const createProducts = async data => {
   try {
     data.forEach(product => {
       if (
@@ -39,7 +35,7 @@ export const createProductsToDB = async data => {
         throw new Error('필수 입력 요소가 빠졌습니다');
       }
     });
-    const result = await addProductQuery(data);
+    const result = await prodDao.createProducts(data);
     return result;
   } catch (err) {
     throw err;

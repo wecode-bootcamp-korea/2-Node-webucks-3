@@ -1,15 +1,10 @@
 import express from 'express';
-import { signup, login, getAllUsers } from '../controllers/userController.js';
-import { protect } from '../controllers/tokenController.js';
+import { userController, tokenController } from '../controllers';
 const router = express.Router();
 
-router.post('/test', protect, (req, res) => {
-  res.status(200).json({
-    message: "You're Authorized Person!",
-  });
-});
-router.get('/', protect, getAllUsers);
-router.post('/signup', signup);
-router.post('/login', login);
+router.get('/', tokenController.protect, userController.getAllUsers);
+router.post('/signup', userController.signup);
+router.post('/login', userController.login);
+router.patch('/update', userController.updateUser);
 
 export default router;
