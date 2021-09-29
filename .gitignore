@@ -243,9 +243,3 @@ tags
 
 # memo
 
-ans-server-module.js
-ans-index.js
-ans-userRouter-module.js
-ans-userController-module.js
-ans-userService-module.js
-ans-userDao-module.js
