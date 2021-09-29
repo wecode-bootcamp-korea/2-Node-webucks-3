@@ -1,5 +1,6 @@
 import express from 'express';
-import { userController, tokenController } from '../controllers';
+import { userController } from '../controllers';
+import tokenController from '../middlewares';
 const router = express.Router();
 
 router.get('/', tokenController.verifyToken, userController.getAllUsers);

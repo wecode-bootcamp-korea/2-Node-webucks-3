@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: './config.env' });
 import { userService } from '../services';
-import { createSendToken } from './tokenController';
+import tokenController from '../middlewares';
 import utils from '../utils';
 
 export const getAllUsers = utils.catchAsyncWrap(async (req, res, next) => {
@@ -47,7 +47,7 @@ export const login = utils.catchAsyncWrap(async (req, res, next) => {
       new utils.AppError('이메일과 패스워드를 다시 확인해주세요', 401)
     );
 
-  createSendToken(user, 201, res);
+  tokenController.createSendToken(user, 201, res);
 });
 
 export const updateUser = utils.catchAsyncWrap(async (req, res, next) => {
