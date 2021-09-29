@@ -37,3 +37,13 @@ export const login = async (email, password) => {
     throw new utils.AppError('User is not exist', 404);
   }
 };
+
+export const updateUser = async (email, updateInfo) => {
+  const validate = await userDao.findUserByEmail(email);
+  if (!validate.length)
+    throw new utils.AppError('해당 유저가 존재하지 않습니다', 404);
+
+  await userDao.updateUser(email, updateInfo);
+
+  return await userDao.findUserByEmail(email);
+};

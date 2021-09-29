@@ -1,12 +1,14 @@
 import express from 'express';
-import { prodController } from '../controllers';
+import { prodController, tokenController } from '../controllers';
 
 const router = express.Router();
 
 router
   .route('/')
-  .get(prodController.getProducts)
-  .post(prodController.createProducts);
-router.route('/:id').get(prodController.getProduct);
+  .get(tokenController.verifyToken, prodController.getProducts)
+  .post(tokenController.verifyToken, prodController.createProducts);
+router
+  .route('/:id')
+  .get(tokenController.verifyToken, prodController.getProduct);
 
 export default router;

@@ -1,11 +1,11 @@
 import { prodService } from '../services';
 
-export const getProducts = async (req, res) => {
+export const getProduct = async (req, res) => {
   try {
-    const products = await prodService.getProducts();
+    const product = await prodService.getProduct(req.params.id);
     res.status(200).json({
       status: 'success',
-      data: products,
+      product,
     });
   } catch (err) {
     res.status(404).json({
@@ -15,12 +15,12 @@ export const getProducts = async (req, res) => {
   }
 };
 
-export const getProduct = async (req, res) => {
+export const getProducts = async (req, res) => {
   try {
-    const product = await prodService.getProduct(req.params.id);
+    const products = await prodService.getProducts();
     res.status(200).json({
       status: 'success',
-      product,
+      data: products,
     });
   } catch (err) {
     res.status(404).json({

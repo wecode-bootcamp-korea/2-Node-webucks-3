@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: './config.env' });
 import { userService } from '../services';
-import { createSendToken } from './tokenController';
+import { createSendToken, verifyToken } from './tokenController';
 import utils from '../utils';
 
 export const getAllUsers = utils.catchAsyncWrap(async (req, res, next) => {
@@ -51,8 +51,18 @@ export const login = utils.catchAsyncWrap(async (req, res, next) => {
 });
 
 export const updateUser = utils.catchAsyncWrap(async (req, res, next) => {
-  Object.keys(req.body);
+  const email = req.body?.email;
+  if (!email) throw new utils.AppError('이메일을 입력해주세요', 400);
+
+  const updateInfo = {
+    username: req.body?.username,
+    address: req.body?.address,
+    phoneNumber: req.body?.phonenumber,
+  };
+
+  const result = await userService.updateUser(email, updateInfo);
+
   res.status(201).json({
-    foo,
+    result,
   });
 });

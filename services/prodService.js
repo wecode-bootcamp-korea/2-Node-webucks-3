@@ -15,6 +15,7 @@ export const getProduct = async id => {
 export const getProducts = async (req, res) => {
   try {
     const products = await prodDao.getProducts();
+    console.log(products);
     if (!products.length) {
       throw new Error("Sorry! There's no data");
     }
@@ -35,6 +36,7 @@ export const createProducts = async data => {
         throw new Error('필수 입력 요소가 빠졌습니다');
       }
     });
+    console.log(data);
     const result = await prodDao.createProducts(data);
     return result;
   } catch (err) {

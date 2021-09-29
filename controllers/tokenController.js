@@ -30,7 +30,16 @@ export const createSendToken = (user, statusCode, res) => {
   });
 };
 
-export const protect = utils.catchAsyncWrap(async (req, res, next) => {
+export const restriction = (req, res, next) => {
+  if (req.body.email === 'admin@admin.com') {
+    req.authorizedAccount = 'admin@admin.com';
+  } else {
+    req.authorizedAccount = req.body.email;
+  }
+  next();
+};
+
+export const verifyToken = utils.catchAsyncWrap(async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&
@@ -40,17 +49,16 @@ export const protect = utils.catchAsyncWrap(async (req, res, next) => {
   }
 
   if (!token) {
-    return next(
-      new utils.AppError('당신은 회원 정보를 조회할 토큰이 없습니다', 401)
-    );
+    return next(new utils.AppError('접근 권한이 없습니다', 403));
   }
 
   const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-  if (decoded.id !== 'admin@admin.com') {
-    return next(
-      new utils.AppError('당신은 회원 정보를 조회할 권한이 없습니다', 401)
-    );
+  if (
+    decoded.id !== req.authorizedAccount &&
+    decoded.id !== 'admin@admin.com'
+  ) {
+    return next(new utils.AppError('접근 권한이 없습니다', 403));
   }
   next();
 });
