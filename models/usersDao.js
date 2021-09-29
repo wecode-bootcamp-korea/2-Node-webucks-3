@@ -9,15 +9,15 @@ const getAllUser = async () => {
 };
 
 const createUser = async (email, hashedPassword) => {
-  const user = await prisma.$queryRaw`
+  return await prisma.$queryRaw`
     INSERT INTO
       users
     (email, password)
       VALUES (${email}, ${hashedPassword});`;
-  return user;
 };
 
 const getUserInfo = async (email) => {
+  console.log(email);
   return await prisma.$queryRaw`
     SELECT
       u.email, u.password, u.id
