@@ -1,20 +1,14 @@
-import express from 'express';
 import dotenv from 'dotenv';
-import route from './routes/user.js';
-import routeProd from './routes/products.js';
-import routeCategory from './routes/categories.js';
+dotenv.config({ path: './config.env' });
+import app from './app.js';
 
-dotenv.config();
-const app = express();
-app.use(express.json());
-const PORT = 7777 | process.env.PORT;
+const PORT = process.env.PORT || 8000;
+const start = async () => {
+  try {
+    app.listen(PORT, () => console.log(`App running on port ${PORT}...`));
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-app.get('/', (req, res) => {
-  res.send('Hello, I am working!');
-});
-
-app.use('/api/user', route);
-app.use('/api/products', routeProd);
-app.use('/api/categories', routeCategory);
-
-app.listen(PORT, () => console.log(`server on ${PORT}`));
+start();
