@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: './config.env' });
 import { userService } from '../services';
-import { createSendToken, verifyToken } from './tokenController';
+import { createSendToken } from './tokenController';
 import utils from '../utils';
 
 export const getAllUsers = utils.catchAsyncWrap(async (req, res, next) => {
@@ -64,5 +64,15 @@ export const updateUser = utils.catchAsyncWrap(async (req, res, next) => {
 
   res.status(201).json({
     result,
+  });
+});
+
+export const deleteUser = utils.catchAsyncWrap(async (req, res, next) => {
+  const result = await userService.deleteUser(
+    req.body.email,
+    req.body.password
+  );
+  res.status(204).json({
+    message: `${req.body.email} 계정이 삭제되었습니다.`,
   });
 });

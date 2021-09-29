@@ -1,4 +1,5 @@
 import prisma from '../prisma';
+import utils from '../utils';
 
 export const findUserByEmail = email => {
   return prisma.$queryRaw`
@@ -11,7 +12,7 @@ export const registerUserToDB = async userData => {
     const doesUserAlreadyExist = await findUserByEmail(userData.email);
 
     if (doesUserAlreadyExist.length !== 0)
-      throw new Error('User Already Exist!', 400);
+      throw new utils.AppError('이미 존재하는 이메일입니다.', 400);
 
     const result = await prisma.$queryRaw`
     INSERT INTO users (email, password, username, address, phone_number, policy_agreed)
@@ -28,7 +29,8 @@ export const searchUserFromDB = async email => {
     const hashedPw = await prisma.$queryRaw`
     SELECT users.password FROM users WHERE users.email = ${email}
     `;
-    if (!hashedPw.length) throw new Error('User is not exist');
+    if (!hashedPw.length)
+      throw new utils.AppError('존재하지 않는 유저입니다', 404);
     return hashedPw;
   } catch (err) {
     throw err;
@@ -37,9 +39,12 @@ export const searchUserFromDB = async email => {
 
 export const getAllUsers = async () => {
   try {
-    return await prisma.$queryRaw`
+    const result = await prisma.$queryRaw`
     SELECT * FROM users;
     `;
+    if (!result.length)
+      throw new utils.AppError('유저가 존재하지 않습니다.', 404);
+    return result;
   } catch (err) {
     throw err;
   }
@@ -52,4 +57,10 @@ export const updateUser = async (email, updateInfo) => {
     },
     data: updateInfo,
   });
+};
+
+export const deleteUser = async email => {
+  await prisma.$queryRaw`
+  DELETE FROM users WHERE email=${email}
+  `;
 };

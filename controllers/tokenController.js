@@ -3,7 +3,7 @@ import utils from '../utils';
 
 export const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
+    expiresIn: process.env.JWT_EXPIRES_IN * 1,
   });
 };
 
@@ -12,9 +12,7 @@ export const createSendToken = (user, statusCode, res) => {
 
   const cookieOptions = {
     httpOnly: true,
-    expires: new Date(
-      Date.now() + process.env.JWT_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
+    expires: new Date(Date.now() + process.env.JWT_EXPIRES_IN),
   };
 
   if (process.env.NODE_ENV !== 'development') cookieOptions.secure = true;

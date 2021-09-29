@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
-import { userDao } from '../models';
 import utils from '../utils';
+import { userDao } from '../models';
 
 export const getAllUsers = async () => {
   try {
@@ -29,12 +29,12 @@ export const login = async (email, password) => {
   if (userHash.password) {
     const validPass = await bcrypt.compare(password, userHash.password);
     if (!validPass) {
-      throw new utils.AppError('Wrong password!', 400);
+      throw new utils.AppError('잘못된 비밀번호입니다.', 400);
     } else {
       return email;
     }
   } else {
-    throw new utils.AppError('User is not exist', 404);
+    throw new utils.AppError('유저가 존재하지 않습니다.', 404);
   }
 };
 
@@ -46,4 +46,15 @@ export const updateUser = async (email, updateInfo) => {
   await userDao.updateUser(email, updateInfo);
 
   return await userDao.findUserByEmail(email);
+};
+
+export const deleteUser = async (email, password) => {
+  try {
+    const user = await login(email, password);
+    if (!user) throw err;
+    await userDao.deleteUser(email);
+    return user;
+  } catch (err) {
+    throw err;
+  }
 };

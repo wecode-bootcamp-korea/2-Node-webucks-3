@@ -11,5 +11,11 @@ router.patch(
   tokenController.verifyToken,
   userController.updateUser
 );
+router.delete(
+  '/delete',
+  tokenController.restriction,
+  tokenController.verifyToken,
+  userController.deleteUser
+);
 
 export default router;
