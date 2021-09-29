@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import AppError from '../utils/appError';
 import catchAsyncWrap from '../utils/catchAsyncWrap';
 
 export const signToken = id => {
@@ -40,14 +41,13 @@ export const protect = catchAsyncWrap(async (req, res, next) => {
   }
 
   if (!token) {
-    return next(
-      new AppError('You are not logged in! Please log in to get access.', 401)
-    );
+    return next(new AppError('당신은 회원 정보를 조회할 토큰이 없습니다', 401));
   }
 
   const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-  req.user = decoded.id.email;
-  console.log(req.user);
+  if (decoded.id !== 'admin@admin.com') {
+    return next(new AppError('당신은 회원 정보를 조회할 권한이 없습니다', 401));
+  }
   next();
 });

@@ -30,3 +30,13 @@ export const searchUserFromDB = async email => {
     throw err;
   }
 };
+
+export const getAllUsers = async () => {
+  try {
+    return await prisma.$queryRaw`
+    SELECT * FROM users;
+    `;
+  } catch (err) {
+    throw err;
+  }
+};
