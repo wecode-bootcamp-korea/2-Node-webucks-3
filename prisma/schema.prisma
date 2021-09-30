@@ -8,52 +8,65 @@ datasource db {
 }
 
 model Category {
-  id      Int       @id @default(autoincrement()) @db.TinyInt
-  name    String    @db.VarChar(16)
-  product Product[]
+  id       Int       @id @default(autoincrement()) @db.TinyInt
+  name     String    @db.VarChar(16)
+  products Product[]
 
   @@map("categories")
 }
 
 model Product {
-  id          Int      @id @default(autoincrement()) @db.TinyInt
-  koreanName  String   @map("korean_name") @db.VarChar(50)
-  englishName String   @map("english_name") @db.VarChar(50)
-  categoryId  Int      @map("category_id") @db.TinyInt
-  category    Category @relation(fields: [categoryId], references: [id])
+  id               Int              @id @default(autoincrement()) @db.TinyInt
+  koreanName       String           @map("korean_name") @db.VarChar(50)
+  englishName      String           @map("english_name") @db.VarChar(50)
+  categoryId       Int              @map("category_id") @db.TinyInt
+  category         Category         @relation(fields: [categoryId], references: [id])
+  images           Image[]
+  productAllergies ProductAllergy[]
+  nutritions       Nutrition[]
 
-  @@index([categoryId], map: "products_category_id_fkey")
+  // @@index([categoryId], map: "products_category_id_fkey")
   @@map("products")
 }
 
 model Image {
-  id        Int    @id @default(autoincrement()) @db.TinyInt
-  imageUrl  String @db.VarChar(100)
-  productId Int    @map("product_id") @db.TinyInt
+  id        Int     @id @default(autoincrement()) @db.TinyInt
+  imageUrl  String  @db.VarChar(100)
+  productId Int     @map("product_id") @db.TinyInt
+  products  Product @relation(fields: [productId], references: [id])
 
   @@map("images")
 }
 
 model Allergy {
-  id   Int    @id @default(autoincrement()) @db.TinyInt
-  name String @db.VarChar(16)
+  id               Int              @id @default(autoincrement()) @db.TinyInt
+  name             String           @db.VarChar(16)
+  productAllergies ProductAllergy[]
 
   @@map("allergies")
 }
 
 model ProductAllergy {
-  id        Int @id @default(autoincrement()) @db.TinyInt
-  productId Int @map("product_id") @db.TinyInt
-  allergyId Int @map("allergy_id") @db.TinyInt
+  id        Int     @id @default(autoincrement()) @db.TinyInt
+  productId Int     @map("product_id") @db.TinyInt
+  product   Product @relation(fields: [productId], references: [id])
+  allergyId Int     @map("allergy_id") @db.TinyInt
+  allergy   Allergy @relation(fields: [allergyId], references: [id])
+
 
   @@map("product_allergies")
 }
 
 model Nutrition {
-  id        Int    @id @default(autoincrement()) @db.TinyInt
-  name      String @db.VarChar(16)
-  productId Int    @map("product_id") @db.TinyInt
-  amount    Int
+  id        Int     @id @default(autoincrement()) @db.TinyInt
+  productId Int     @map("product_id") @db.TinyInt
+  product   Product @relation(fields: [productId], references: [id])
+  kcal      Int
+  fat       Int
+  protein   Int
+  sodium    Int
+  sugar     Int
+  caffeine  Int
 
   @@map("nutritions")
 }
@@ -62,7 +75,7 @@ model User {
   id            Int     @id @default(autoincrement()) @db.TinyInt
   email         String  @unique @db.VarChar(50)
   address       String? @db.VarChar(100)
-  password      String  @db.VarChar(50)
+  password      String  @db.VarChar(100)
   phone_number  String? @db.VarChar(16)
   policy_agreed Boolean @default(true)
   username      String? @db.VarChar(16)

@@ -2,6 +2,8 @@ import userService from '../services/userService'
 
 
 const createUser = async (req, res) => {
+  console.log('>>>>usercontroller req body')
+  console.log(req.body)
   let { email, address, password, phone_number, policy_agreed, username } = req.body;
   await userService.createUser(email, address, password, phone_number, policy_agreed, username); 
   res.json(userService.userCreated(email, address, password, phone_number, policy_agreed, username ));  //여기선 인자 다 안넘겨주나 그냥 ()빈걸루?
