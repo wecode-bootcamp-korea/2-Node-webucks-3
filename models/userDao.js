@@ -27,6 +27,7 @@ const addUser = async (email, password, hashedPassword, username, address, phone
 const checkUser = async(email) => {
   return await prisma.$queryRaw`
     SELECT
+      u.id,
       u.email,
       u.password,
       u.hashed_password,
