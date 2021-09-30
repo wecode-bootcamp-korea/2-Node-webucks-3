@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 dotenv.config({ path: `${__dirname}/../config.env` });
 import jwt from 'jsonwebtoken';
 import utils from '../utils';
-import verifySession from '../utils/expiredErrorHandler.js';
 
 const cookieOptions = {
   httpOnly: true,
@@ -61,21 +60,22 @@ export const verifyToken = utils.catchAsyncWrap(async (req, res, next) => {
     refreshToken = req.headers.cookie.split('refreshToken=')[1];
   }
 
-  if (!verifySession(accessToken) && !verifySession(refreshToken))
+  const accessValid = await utils.verifySession(accessToken);
+  const refreshValid = await utils.verifySession(refreshToken);
+
+  if (!accessValid && !refreshValid)
     return next(new utils.AppError('API 접근 권한이 없습니다', 403));
 
-  if (!verifySession(accessToken) && verifySession(refreshToken)) {
+  if (!accessValid && refreshValid) {
     const newAccessToken = await issueAccessToken(req.body.email);
     res.cookie('accessToken', newAccessToken, cookieOptions);
     accessToken = newAccessToken;
     console.log('세션이 끝나서 리프레시 쿠키를 드려요');
   }
 
-  const decoded = await jwt.verify(accessToken, process.env.JWT_SECRET_KEY);
-
   if (
-    decoded.id !== req.authorizedAccount &&
-    decoded.id !== 'admin@admin.com'
+    accessToken.id !== req.authorizedAccount &&
+    accessToken.id !== 'admin@admin.com'
   ) {
     return next(new utils.AppError('접근 권한이 없습니다', 403));
   }

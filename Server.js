@@ -1,3 +1,4 @@
+import prisma from './prisma/index.js';
 import dotenv from 'dotenv';
 dotenv.config({ path: `${__dirname}/../config.env` });
 import app from './app.js';
@@ -8,6 +9,8 @@ const start = async () => {
     app.listen(PORT, () => console.log(`App running on port ${PORT}...`));
   } catch (err) {
     console.log(err);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 

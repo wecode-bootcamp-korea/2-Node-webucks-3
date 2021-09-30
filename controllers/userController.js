@@ -47,7 +47,7 @@ export const login = utils.catchAsyncWrap(async (req, res, next) => {
       new utils.AppError('이메일과 패스워드를 다시 확인해주세요', 401)
     );
 
-  tokenController.createSendToken(user, 201, res);
+  tokenController.createSendToken(user, 200, res);
 });
 
 export const updateUser = utils.catchAsyncWrap(async (req, res, next) => {
